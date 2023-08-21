@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block metadescription %}
+  {% if category %}
+    {{ category.description|truncatewords:50 }}
+  {% else %}
+    Welcome to Holy Store
+  {% endif %}
+{% endblock %}
+
+{% block title %}
+  {% if category %}
+    {{ product.name }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-lg-6 mb-3 mb-lg-0">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+    </div>
+    <div class="col-lg-6">
+      <h1 class="my_prod_title">{{ product.name }}</h1>
+      <p class="h3">${{ product.price }}</p>
+      <div class="my_prod_description">
+        <h2 class="my_title">Product Description</h2>
+        <p class="my_prod_text">{{ product.description }}</p> <!-- Removed text-justify class -->
+      </div>
+      {% if product.stock <= 0 %}
+        <p class="h5 text-danger my_prod_text"><b>OUT OF STOCK</b></p>
+      {% else %}
+        <a class="btn btn-primary" href="{% url 'cart:add_cart' product.id %}">ADD TO CART</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 text-center">
+      <a class="btn btn-secondary" href="{% url 'shop:allProdCat' %}">HOME</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

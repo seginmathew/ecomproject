@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block metadescription %}
+THIS IS THE CART PAGE. PROCEED TO REVIEW AND PLACE YOUR ORDER.
+{% endblock %}
+
+{% block title %}
+CART - HOLY PVT LTD
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-4">
+  {% if not cart_items %}
+  <div class="text-center">
+    <h1 class="my_title">
+      YOUR SHOPPING CART IS EMPTY
+    </h1>
+    <p class="text-center">
+      PLEASE CLICK <a href="{% url 'shop:allProdCat' %}">HERE</a>
+    </p>
+  </div>
+  {% else %}
+  <div class="text-center">
+    <h1 class="my_title">
+      YOUR SHOPPING CART
+    </h1>
+    <p class="my_title">Review all details before you buy</p>
+  </div>
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <table class="table my_custom_table">
+        <thead class="my_custom_thead">
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cart_item in cart_items %}
+          <tr>
+            <td>
+              <div class="cart-item">
+                <div class="product-image">
+                  <a href="{{ cart_item.product.get_absolute_url }}"><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" class="rounded custom_image" style="max-width: 100px;"></a>
+                </div>
+                <div class="product-details">
+                  <p class="product-name">{{ cart_item.product.name }}</p>
+                  <p class="product-sku">SKU: {{ cart_item.product.id }}</p>
+                </div>
+              </div>
+            </td>
+            <td>${{ cart_item.product.price }}</td>
+            <td>
+              <div class="quantity">
+                <a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-minus"></i></a>
+                <span class="qty-value">{{ cart_item.quantity }}</span>
+                <a href="{% url 'cart:add_cart' cart_item.product.id %}" class="btn btn-sm btn-secondary"><i class="fa-solid fa-plus"></i></a>
+              </div>
+            </td>
+            <td>${{ cart_item.sub_total }}</td>
+            <td>
+              {% if cart_item.quantity < cart_item.product.stock %}
+              <div class="actions">
+                <a href="{% url 'cart:add_cart' cart_item.product.id %}" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i></a>
+                <a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="btn btn-sm btn-primary"><i class="fa-solid fa-minus"></i></a>
+                <a href="{% url 'cart:full_remove' cart_item.product.id %}" class="btn btn-sm btn-danger" data-action="remove" data-product-id="{{ cart_item.product.id }}"><i class="fa-solid fa-trash"></i></a>
+              </div>
+              {% else %}
+              <div class="actions">
+                <button class="btn btn-sm btn-primary" disabled><i class="fa-solid fa-plus"></i></button>
+                <a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="btn btn-sm btn-primary" disabled><i class="fa-solid fa-minus"></i></a>
+                <a href="{% url 'cart:full_remove' cart_item.product.id %}" class="btn btn-sm btn-danger" data-action="remove" data-product-id="{{ cart_item.product.id }}"><i class="fa-solid fa-trash"></i></a>
+              </div>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h4 class="my_title">Total Amount: ${{ total }}</h4>
+      <a href="#" class="btn btn-primary btn-lg" target="_blank">Proceed to Buy</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

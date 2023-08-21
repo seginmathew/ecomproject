@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block metadescription %}
+Find the best deals here.
+{% endblock %}
+
+{% block title %}
+search
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12 text-center">
+            <p class="my_search_text">You have searched for: <b>"{{ query }}"</b></p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mx-auto">
+        {% for product in products %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width: 18rem; height: 100%;">
+                {% if product.image %}
+                <a href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{ product.image.url }}"
+                                                     alt="{{ product.name }}"></a>
+                {% else %}
+                <p>No image available for this product.</p>
+                {% endif %}
+                <div class="card-body" style="height: 150px;"> <!-- Set the desired fixed height -->
+                    <h3>{{ product.name }}</h3>
+                    <p>${{ product.price }}</p>
+                    {% if product.stock > 0 %}
+                    <p>In Stock: {{ product.stock }}</p>
+                    {% else %}
+                    <p><b>Out of Stock</b></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="row mx-auto">
+            <p class="text-center my_search_text">No Results Found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
